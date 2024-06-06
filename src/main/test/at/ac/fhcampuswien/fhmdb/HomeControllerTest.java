@@ -3,6 +3,9 @@ package at.ac.fhcampuswien.fhmdb;
 import at.ac.fhcampuswien.fhmdb.models.Genre;
 import at.ac.fhcampuswien.fhmdb.models.Movie;
 import at.ac.fhcampuswien.fhmdb.models.SortedState;
+import at.ac.fhcampuswien.fhmdb.api.MovieAPIRequestBuilder;
+import at.ac.fhcampuswien.fhmdb.database.MovieRepository;
+import at.ac.fhcampuswien.fhmdb.database.WatchlistRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -222,4 +225,38 @@ class HomeControllerTest {
         assertEquals(homeController.allMovies, homeController.observableMovies);
     }
 
+    @Test
+    void build_url() {
+        // given
+        MovieAPIRequestBuilder url = new HomeControllerTest()
+            .genre("ACTION")
+            .ratingFrom("1")
+            .releaseYear("1900")
+            .query("test")
+            .build();
+
+        assertEquals(url, "https://prog2.fh-campuswien.ac.at/movies?query=test&genre=ACTION&releaseYear=1900&ratingFrom=1&");
+    }
+
+    @Test
+    void build_url_if_parameters_are_null() {
+        // given
+        MovieAPIRequestBuilder url = new HomeControllerTest()
+                .genre(null)
+                .ratingFrom(null)
+                .releaseYear(null)
+                .query(null)
+                .build();
+
+        assertEquals(url, "https://prog2.fh-campuswien.ac.at/movies?");
+    }
+
+    @Test
+    void movierepository_singleton_can_only_be_instanced_once() {
+        // given
+        MovieRepository movieRepository1 = MovieRepository.getInstace();
+        MovieRepository movieRepository2 = MovieRepository.getInstace();
+
+        assertEquals(movieRepository1, movieRepository2);
+    }
 }
