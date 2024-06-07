@@ -11,7 +11,7 @@ public class MovieContext {
 
     public MovieContext(List<Movie> movies){
         this.movies = new ArrayList<>(movies);
-        this.currentState = new DefaultState();
+        this.currentState = new DefaultState(movies);
     }
     public void setState(SortState state){
         this.currentState = state;
